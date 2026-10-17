@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>CARTI TEXT 98</title>
+    <style>
+      :root {
+        --desktop: #008080;
+        --face: #c0c0c0;
+        --hi: #ffffff;
+        --lo: #808080;
+        --dk: #000000;
+        --title1: #000080;
+        --title2: #1084d0;
+        --field: #ffffff;
+        --ink: #000000;
+        --accent: #b00020;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      :root[data-theme="night"] {
+        --desktop: #12001f;
+        --title1: #3a0050;
+        --title2: #b0004a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 16px 12px 70px;
+        background-color: var(--desktop);
+        background-image:
+          linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.06) 25%,
+            transparent 25%,
+            transparent 75%,
+            rgba(255, 255, 255, 0.06) 75%
+          ),
+          linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.06) 25%,
+            transparent 25%,
+            transparent 75%,
+            rgba(255, 255, 255, 0.06) 75%
+          );
+        background-size: 8px 8px;
+        background-position:
+          0 0,
+          4px 4px;
+        color: var(--ink);
+        font-family: "MS Sans Serif", Tahoma, "Segoe UI", Verdana, sans-serif;
+        font-size: 14px;
+      }
+      .mono {
+        font-family: "Courier New", ui-monospace, Menlo, monospace;
+      }
+
+      /* beveled helpers */
+      .raised {
+        background: var(--face);
+        border: 2px solid;
+        border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+        box-shadow:
+          inset -1px -1px 0 var(--lo),
+          inset 1px 1px 0 #dfdfdf;
+      }
+      .sunken {
+        border: 2px solid;
+        border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+        box-shadow: inset 1px 1px 0 var(--dk);
+      }
+
+      .window {
+        max-width: 720px;
+        margin: 0 auto 16px;
+        padding: 3px;
+      }
+      .titlebar {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 4px;
+        background: linear-gradient(90deg, var(--title1), var(--title2));
+        color: #fff;
+        font-weight: bold;
+        font-size: 13px;
+      }
+      .titlebar .ico {
+        font-size: 14px;
+      }
+      .titlebar .t {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .winbtns {
+        display: flex;
+        gap: 2px;
+      }
+      .winbtns span {
+        width: 18px;
+        height: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--face);
+        color: #000;
+        font-size: 11px;
+        line-height: 1;
+        cursor: default;
+        border: 2px solid;
+        border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+      }
+      .menubar {
+        display: flex;
+        gap: 14px;
+        padding: 3px 8px;
+        font-size: 13px;
+      }
+      .menubar u {
+        text-decoration: underline;
+      }
+      .body {
+        padding: 10px;
+      }
+
+      .banner {
+        background: #000;
+        color: #00ff66;
+        font-family: "Courier New", monospace;
+        padding: 4px 0;
+        margin-bottom: 10px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .banner span {
+        display: inline-block;
+        padding-left: 100%;
+        animation: scroll 14s linear infinite;
+      }
+      @keyframes scroll {
+        to {
+          transform: translateX(-100%);
+        }
+      }
+
+      h1 {
+        margin: 0 0 4px;
+        font-family: Impact, "Arial Black", sans-serif;
+        font-size: clamp(1.8rem, 8vw, 2.8rem);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--title1);
+        text-shadow:
+          2px 2px 0 var(--hi),
+          3px 3px 0 var(--lo);
+      }
+      .sub {
+        margin: 0 0 10px;
+      }
+
+      fieldset {
+        border: 2px groove var(--hi);
+        margin: 0 0 10px;
+        padding: 8px 10px 10px;
+      }
+      legend {
+        padding: 0 4px;
+        font-size: 13px;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 90px;
+        resize: vertical;
+        padding: 6px;
+        background: var(--field);
+        color: var(--ink);
+        border-radius: 0;
+        font-family: "Courier New", ui-monospace, monospace;
+        font-size: 15px;
+        border: 2px solid;
+        border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+        box-shadow: inset 1px 1px 0 var(--dk);
+      }
+      textarea:focus {
+        outline: 1px dotted #000;
+        outline-offset: -4px;
+      }
+      #output {
+        background: #000;
+        color: #00ff66;
+        min-height: 110px;
+        line-height: 1.5;
+        caret-color: #00ff66;
+      }
+
+      button {
+        font-family: inherit;
+        font-size: 13px;
+        color: #000;
+        cursor: pointer;
+        border-radius: 0;
+        background: var(--face);
+        padding: 5px 14px;
+        min-height: 26px;
+        border: 2px solid;
+        border-color: var(--hi) var(--dk) var(--dk) var(--hi);
+        box-shadow:
+          inset -1px -1px 0 var(--lo),
+          inset 1px 1px 0 #dfdfdf;
+      }
+      button:active {
+        border-color: var(--dk) var(--hi) var(--hi) var(--dk);
+        box-shadow: inset 1px 1px 0 var(--lo);
+        padding: 6px 13px 4px 15px;
+      }
+      button:focus-visible {
+        outline: 1px dotted #000;
+        outline-offset: -5px;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+      .presets button {
+        font-size: 12px;
+        padding: 3px 10px;
+        min-height: 22px;
+      }
+
+      .slider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      input[type="range"] {
+        flex: 1;
+        min-width: 140px;
+        accent-color: var(--title1);
+      }
+      .val {
+        min-width: 26px;
+        text-align: center;
+        padding: 1px 6px;
+        background: var(--field);
+        border: 2px solid;
+        border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+      }
+
+      .checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        margin-top: 8px;
+      }
+      .checks label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+      input[type="checkbox"] {
+        accent-color: var(--title1);
+        width: 14px;
+        height: 14px;
+        margin: 0;
+      }
+
+      .statusbar {
+        display: flex;
+        gap: 3px;
+        padding: 3px 3px 0;
+        font-size: 12px;
+      }
+      .statusbar div {
+        padding: 2px 6px;
+        border: 1px solid;
+        border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+      }
+      .statusbar .grow {
+        flex: 1;
+      }
+      .blink {
+        animation: blink 1s steps(2, start) infinite;
+      }
+      @keyframes blink {
+        to {
+          visibility: hidden;
+        }
+      }
+
+      .taskbar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 4px calc(3px + env(safe-area-inset-bottom, 0px));
+        z-index: 5;
+        background: var(--face);
+        border-top: 2px solid var(--hi);
+        box-shadow: 0 -1px 0 var(--lo);
+      }
+      .taskbar .start {
+        font-weight: bold;
+        padding: 3px 10px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .taskbar .task {
+        flex: 1;
+        max-width: 220px;
+        text-align: left;
+        font-weight: bold;
+        padding: 3px 8px;
+        border-color: var(--dk) var(--hi) var(--hi) var(--dk);
+        box-shadow: inset 1px 1px 0 var(--lo);
+        background: #d8d8d8;
+        cursor: default;
+      }
+      .taskbar .clock {
+        margin-left: auto;
+        padding: 3px 10px;
+        border: 1px solid;
+        border-color: var(--lo) var(--hi) var(--hi) var(--lo);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window raised">
+      <div class="titlebar">
+        <span class="ico">🦋</span
+        ><span class="t">CARTI TEXT 98 - [Untitled]</span>
+        <div class="winbtns"><span>_</span><span>□</span><span>✕</span></div>
+      </div>
+      <div class="menubar">
+        <span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span
+        ><span><u>H</u>elp</span>
+      </div>
+
+      <div class="body">
+        <div class="banner">
+          <span
+            >*** welcome to carti text 98 *** type normal. get kING vAMP. *** 🖤
+            🦋 🧛🏿‍♂️ ***</span
+          >
+        </div>
+
+        <h1>🖤 Carti Text 🦋</h1>
+        <p class="sub">
+          Type normal text below and press <b>Reroll</b> for a new one.
+        </p>
+
+        <fieldset>
+          <legend>Basic Text</legend>
+          <textarea id="input" placeholder="type something...">
+pull up late and turn the lights off</textarea
+          >
+          <div class="row presets" style="margin-top: 6px">
+            <button data-p="pull up late and turn the lights off">
+              pull up late
+            </button>
+            <button data-p="I don't pick up the phone when you call">
+              don't pick up
+            </button>
+            <button data-p="we stay up all night and never come home">
+              stay up all night
+            </button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Options</legend>
+          <div class="slider">
+            <span>Chaos:</span>
+            <input type="range" id="chaos" min="1" max="10" value="6" />
+            <span class="val" id="chaosVal">6</span>
+          </div>
+          <div class="checks">
+            <label
+              ><input type="checkbox" id="optEmoji" checked /> Emojis</label
+            >
+            <label><input type="checkbox" id="optSym" checked /> Symbols</label>
+            <label
+              ><input type="checkbox" id="optCase" checked /> Case chaos</label
+            >
+            <label
+              ><input type="checkbox" id="optAdlib" checked /> Ad-libs (_
+              slatt)</label
+            >
+            <label
+              ><input type="checkbox" id="optTag" checked /> Sign off (kING
+              vAMP)</label
+            >
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Carti Text</legend>
+          <textarea id="output" readonly></textarea>
+          <div class="row" style="margin-top: 8px">
+            <button id="regen">🎲 Reroll</button>
+            <button id="copy">Copy</button>
+            <button id="themeBtn">Desktop Theme</button>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="statusbar">
+        <div class="grow" id="toast">Ready<span class="blink">_</span></div>
+        <div id="count">0 chars</div>
+      </div>
+    </div>
+
+    <div class="taskbar">
+      <button class="start">🪟 Start</button>
+      <button class="task">🦋 Carti Text 98</button>
+      <div class="clock" id="clock">12:00 AM</div>
+    </div>
+
+    <script>
+      (function () {
+        var $ = function (id) {
+          return document.getElementById(id);
+        };
+        var input = $("input"),
+          output = $("output"),
+          chaos = $("chaos");
+
+        var EMOJI = [
+          "🖤",
+          "🦋",
+          "🧛🏿‍♂️",
+          "💔",
+          "😦",
+          "💕",
+          "🖤🖤🖤",
+          "🦇",
+          "⛓️",
+          "🥀",
+        ];
+        var STAMPS = [
+          "^ 🦋* !+",
+          "^ 🦋* !+",
+          "& *",
+          "*^ !",
+          "** !++",
+          "*+ _",
+          "++",
+          "^",
+          "!+",
+          "- ",
+          "< 3",
+          ":)",
+        ];
+        var SUFFIX = ["!", "!!", ".", ",", "^", "*", "+", "!+", " :)", "<3"];
+        var STAMP_PLAIN = ["^", "*", "!+", "++", "&", "**", "^ *", "!!"];
+
+        var ADLIBS_END = [
+          "*+ _ slatt",
+          "_ slatt",
+          "_ slatt lit.",
+          "slatt",
+          "*+ _ slatt 🧛🏿‍♂️|",
+          "_ slatt!",
+        ];
+        var ADLIBS_MID = ["_ slatt", "slatt", "_ slatt"];
+
+        function rnd(n) {
+          return Math.floor(Math.random() * n);
+        }
+        function pick(a) {
+          return a[rnd(a.length)];
+        }
+
+        function caseChaos(w) {
+          if (w.length < 3 || Math.random() > 0.35) return w;
+          var out = "";
+          for (var i = 0; i < w.length; i++) {
+            out += i % 2 === 1 ? w[i].toUpperCase() : w[i].toLowerCase();
+          }
+          return out;
+        }
+
+        function convert() {
+          var text = input.value.trim();
+          if (!text) {
+            output.value = "";
+            $("count").textContent = "0 chars";
+            return;
+          }
+          var level = +chaos.value / 10;
+          var useEmoji = $("optEmoji").checked;
+          var useSym = $("optSym").checked;
+          var useCase = $("optCase").checked;
+          var useTag = $("optTag").checked;
+          var useAdlib = $("optAdlib").checked;
+
+          var words = text.split(/\s+/);
+          var parts = [];
+
+          if (useEmoji && Math.random() < level)
+            parts.push(pick(["🖤🖤🖤", "🖤", "🦋"]));
+          if (useSym && Math.random() < level) parts.push(pick(STAMPS));
+
+          words.forEach(function (w, i) {
+            var word = w;
+            if (useCase) word = caseChaos(word);
+            if (useSym && Math.random() < level * 0.35)
+              word += pick(SUFFIX).trim();
+            parts.push(word);
+
+            if (i !== words.length - 1) {
+              var r = Math.random();
+              if (useEmoji && r < level * 0.3) parts.push(pick(EMOJI));
+              else if (useSym && r < level * 0.6)
+                parts.push(
+                  Math.random() < 0.55 ? pick(STAMPS) : pick(STAMP_PLAIN),
+                );
+              else if (useAdlib && r < level * 0.6 + 0.08)
+                parts.push(pick(ADLIBS_MID));
+              else if (useSym && r < level * 0.75) parts.push(":)");
+            }
+          });
+
+          if (useAdlib && Math.random() < 0.3 + level * 0.2)
+            parts.push(pick(ADLIBS_END));
+          if (useSym && Math.random() < level) parts.push(pick(STAMPS));
+          if (useEmoji && Math.random() < level)
+            parts.push(pick(["🧛🏿‍♂️", "🖤", "🦋"]));
+          if (useTag && Math.random() < 0.55)
+            parts.push(
+              pick([
+                "- kING vAMP",
+                "- kING vAMP",
+                "kING vAMP",
+                "- kING vAMP 🧛🏿‍♂️",
+              ]),
+            );
+
+          output.value = parts.join(" ").replace(/\s+/g, " ").trim();
+          $("count").textContent = output.value.length + " chars";
+        }
+
+        function status(msg) {
+          $("toast").innerHTML = msg + '<span class="blink">_</span>';
+        }
+
+        input.addEventListener("input", convert);
+        chaos.addEventListener("input", function () {
+          $("chaosVal").textContent = chaos.value;
+          convert();
+        });
+        ["optEmoji", "optSym", "optCase", "optAdlib", "optTag"].forEach(
+          function (id) {
+            $(id).addEventListener("change", convert);
+          },
+        );
+        $("regen").addEventListener("click", function () {
+          convert();
+          status("Rerolled");
+        });
+
+        document.querySelectorAll(".presets button").forEach(function (b) {
+          b.addEventListener("click", function () {
+            input.value = b.getAttribute("data-p");
+            convert();
+            status("Preset loaded");
+          });
+        });
+
+        $("copy").addEventListener("click", function () {
+          var t = output.value;
+          var done = function () {
+            status("Copied to clipboard");
+            setTimeout(function () {
+              status("Ready");
+            }, 1800);
+          };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(t).then(done, function () {
+              output.select();
+              document.execCommand("copy");
+              done();
+            });
+          } else {
+            output.select();
+            document.execCommand("copy");
+            done();
+          }
+        });
+
+        $("themeBtn").addEventListener("click", function () {
+          var r = document.documentElement;
+          r.setAttribute(
+            "data-theme",
+            r.getAttribute("data-theme") === "night" ? "day" : "night",
+          );
+        });
+
+        function tick() {
+          var d = new Date(),
+            h = d.getHours(),
+            m = d.getMinutes();
+          var ap = h >= 12 ? "PM" : "AM";
+          h = h % 12 || 12;
+          $("clock").textContent = h + ":" + (m < 10 ? "0" : "") + m + " " + ap;
+        }
+        tick();
+        setInterval(tick, 20000);
+
+        convert();
+      })();
+    </script>
+  </body>
+</html>
